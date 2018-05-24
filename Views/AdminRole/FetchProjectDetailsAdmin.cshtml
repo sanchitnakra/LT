@@ -1,0 +1,67 @@
+﻿@model sampleMVC.Models.AdlocationDetails
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>AddProjectAdmin</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script type="text/javascript">
+        function show() {
+            //document.getElementById("dThreshold").display ="block";
+            document.getElementById("dThreshold").style.display = "block";
+            document.getElementById("AddProj").style.display = "none";
+           
+        }
+        </script>
+    </head>
+
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Leave Tracker</a>
+            </div>
+            <ul class="nav navbar-nav">
+                @*<li><a href="#">Register New Member</a></li>
+            <li><a href="~/AdminRole/ApplyLeavesforAdmins">Apply Leave</a></li>*@
+                <li><a href="~/AdminRole/ViewLeavesByAdmin">Approve Leaves</a></li>
+                <li><a href="~/AdminRole/ViewApprovedLeavesByAdmin">View Applied Leaves</a></li>
+                @*<li><a href="~/AdminRole/AdminMoreFeature">More Features</a></li>
+            <li><a href="~/TLRole/Logout">Logout</a></li>*@
+            </ul>
+        </div>
+    </nav>
+
+
+    @foreach (var projectname in ViewBag.list)
+    {
+        <ul>
+            <li>
+                @projectname.ProjectName
+            </li>
+        </ul>
+    }
+    <div class="col-xs-4"><a id="AddProj" onclick="show()">Add New Project</a></div>
+
+    @using (Html.BeginForm())
+    {
+        <div class="row" id="dThreshold" style="display:none">
+            <div class="col-xs-4">
+                @Html.TextBoxFor(m => m.ProjectName, new { @class = "form-control", placeholder = Html.DisplayNameFor(n => n.ProjectName) })
+                <br />
+                <button type="submit" name=m formaction="~/AdminRole/InsertProjectToDB" formmethod="post" class="form-control">Submit</button>
+            </div>
+        </div>
+    }
+
+
+</body>
+</html>

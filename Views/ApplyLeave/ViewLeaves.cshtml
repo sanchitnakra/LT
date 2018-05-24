@@ -1,0 +1,237 @@
+﻿@model sampleMVC.Models.ApplyLeave
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "View Leaves";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script>
+        function deletefnc(x) {
+            var i = 0;
+            var colLen = document.getElementById("LeaveTable").rows[x].cells.length;
+            for (i = 0; i < colLen; i++) {
+                document.getElementById("LeaveTable").rows[x].cells.item(i).innerHTML;
+            }
+        }
+    </script>
+    <title>View Leaves</title>
+    <script>
+        function setPassword() {
+            var Pwd = document.getElementById("txtMSIDCnf").value;
+            $.ajax({
+                url: '@Url.Action("ChangePassword", "LTLogin")',
+                data: { 'Pwd': Pwd },
+                success: function (data) {
+                    if (data != "") {
+                        alert(data);
+                    }
+                    else {
+                        //alert("MSID is wrong try again ");
+                        //document.getElementById("txtMSID").value = "";
+                        //document.getElementById("txtEmailID").value = "";
+                    }
+                },
+                error: function (data) {
+                }
+            }
+            );
+        }
+    </script>
+</head>
+<body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Leave Tracker", "checkRole", "ApplyLeave", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            Leave
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Apply Leave", "ApplyLeaves", "ApplyLeave")</li>
+                            <li>@Html.ActionLink("View Leaves", "ViewLeaves", "ApplyLeave")</li>
+                        </ul>
+                    </li>
+
+                </ul>
+                <div class="nav navbar-nav navbar-right">
+                    @*<button type="button" class="navbar-brand" data-toggle="modal" data-target="#myModal">Change Password?</button>*@
+                    @Html.ActionLink("Change Password", "", "", new { @class = "navbar-brand", data_toggle = "modal", data_target = "#myModal" })
+                    @Html.ActionLink("Logout", "Logout", "LTLogin", new { @class = "navbar-brand" })
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container" style="padding-top:10px">
+        <h1 style="text-align:center;padding-top:50px">Applied Leaves</h1>
+
+        <div class="table-responsive">
+
+            <table class="table table-striped table-bordered table-hover" id="LeaveTable">
+                <tr>
+                    <th>SI No.</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Type of Leave</th>
+                    <th>No. Of Days</th>
+                    <th>Reason</th>
+                    <th>Screen Shot</th>
+                    <th>Edit Leave</th>
+                    <th>Cancel Leave</th>
+                    <th>Leave Status</th>
+                </tr>
+
+                @foreach (var item in Model.LeaveList)
+                {
+
+                    <tr onclick="deletefnc(this)">
+                        <td>@item.sNo</td>
+                        <td>@item.StartDate.ToShortDateString()</td>
+                        <td>@item.EndDate.ToShortDateString()</td>
+                        <td>@item.TypeOfLeaves</td>
+                        <td>@item.TotalLeaves</td>
+                        <td>@item.Reason</td>
+
+                        @if (@item.imageSrc11.Length > 0)
+                        {
+                            <td>
+                                <a href="@Url.Action("ScreenShot", "ApplyLeave", new { id = item.sNo })">
+                                    <img src="data:image/jpg;base64,@(Convert.ToBase64String(item.imageSrc11))" alt="Image" width="50" height="50" />
+                                </a>
+                            </td>
+                        }
+                        else {
+                            <td>
+                                @Html.ActionLink("Add ScreenShot", "editLeavesScreenShot", "ApplyLeave", new { id = item.sNo }, null)
+                            </td>
+                        }
+
+
+                        @if (@item.TypeOfLeaves == "Planned")
+                        {
+                            <td>@Html.ActionLink("Edit Leave", "editLeaves", "ApplyLeave", new { id = item.sNo }, null)</td>
+                            <td>@Html.ActionLink("Cancel", "deleteLeaves", "ApplyLeave", new { id = item.sNo }, new { onclick = "return confirm('Are you sure you wish to cancel this Leave?');" })</td>
+                        }
+
+
+                        else
+                        {
+                            <td></td>
+                            <td></td>
+                        }
+
+                        <td>@item.Status</td>
+
+
+
+                    </tr>
+
+                }
+            </table>
+        </div>
+        @if (TempData["Success"] != null)
+        {
+            <p class="alert alert-success" id="successMessage">@TempData["Success"]</p>
+        }
+    </div>
+
+
+    @using (Html.BeginForm())
+            {
+        <div class="container">
+
+            <!-- Trigger the modal with a button -->
+            @*<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>*@
+
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Please enter New Password</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                Your Password will be appended with your MSID<br />
+                                MSID"Your Password"<br />
+                                Ex : 96MHY"1991"
+                            </p>
+
+                            @Html.TextBoxFor(m => m.Pwd, new { @class = "form-control", id = "txtMSIDTest", type = "password", placeholder = Html.DisplayNameFor(n => n.Pwd) })
+                            @Html.TextBoxFor(m => m.PwdCnf, new { @class = "form-control", id = "txtMSIDCnf", type = "password", placeholder = Html.DisplayNameFor(n => n.PwdCnf), @onchange = "validatePass()" })
+                            @*<button type="submit" name=m class="btn btn-default" formaction="~/LTLogin/forgetPassword" formmethod="post">Submit</button>*@
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" name=m class="btn btn-default" data-dismiss="modal" onclick="setPassword()">Change</button>
+                            @*<button type="submit" name=m class="btn btn-default" data-dismiss="modal" onclick="getEmailID()">Submit</button>*@
+                            @*@Html.ActionLink("Submit", "forgetPassword", "LTLogin", new { @class = "btn btn-default", @data_dismiss = "modal"})*@
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        @*<div class="container">
+
+            <!-- Trigger the modal with a button -->
+            @*<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>*@
+
+            <!-- Modal -->
+        <div class="modal fade" id="addScreenShot" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Please Choose File</h4>
+                    </div>
+                    <div class="modal-body" data--id="">
+                        <p>
+
+                        </p>
+
+                        <input type="file" name="file" class="input-files" required accept="image/jpeg,image/jpg,image/x-png" />
+                        @*@Html.TextBoxFor(m => m.Pwd, new { @class = "form-control", id = "txtMSIDTest", type = "password", placeholder = Html.DisplayNameFor(n => n.Pwd) })
+                            @Html.TextBoxFor(m => m.PwdCnf, new { @class = "form-control", id = "txtMSIDCnf", type = "password", placeholder = Html.DisplayNameFor(n => n.PwdCnf), @onchange = "validatePass()" })*@
+                        @*<button type="submit" name=m class="btn btn-default" formaction="~/LTLogin/forgetPassword" formmethod="post">Submit</button>*@
+
+                    </div>
+                    <div class="modal-footer">
+                        @Html.HiddenFor(m => m.sNo, @Session["Id"])
+                        <button type="submit" name=m class="btn btn-default" formaction="~/ApplyLeave/addScreenShot" formmethod="post">Save</button>
+                        @*<button type="submit" name=m class="btn btn-default" data-dismiss="modal" onclick="setPassword()">Change</button>*@
+                        @*<button type="submit" name=m class="btn btn-default" data-dismiss="modal" onclick="getEmailID()">Submit</button>*@
+                        @*@Html.ActionLink("Submit", "forgetPassword", "LTLogin", new { @class = "btn btn-default", @data_dismiss = "modal"})*@
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+    }
+</body>
+</html>

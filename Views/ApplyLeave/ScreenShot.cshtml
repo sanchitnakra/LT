@@ -1,0 +1,26 @@
+﻿@model sampleMVC.Models.ApplyLeave
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "ScreenShot";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ScreenShot</title>
+</head>
+<body>
+    <div>
+        <button type="button" onclick="location.href='@Url.Action("ViewLeaves","ApplyLeave")'">Back</button>
+    </div>
+    <div style="padding-top:15px; align-content:center">
+
+        <img src="data:image/jpg;base64,@(Convert.ToBase64String(Model.imageSrc11))" alt="Image" width="800" height="800" />
+
+    </div>
+</body>
+</html>
+

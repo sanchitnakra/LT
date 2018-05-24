@@ -1,0 +1,100 @@
+﻿@model sampleMVC.Models.AdminRole
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ViewApprovedLeavesByAdmin</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <script type="text/javascript">
+            function preventBack() { window.history.forward(); }
+            setTimeout("preventBack()", 0);
+            window.onunload = function () { null };
+    </script>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="~/AdminRole/AdminRole">Leave Tracker</a>
+            </div>
+            <div class="nav navbar-nav navbar-right">
+                @Html.ActionLink("Logout", "Logout", "LTLogin", new { @class = "navbar-brand" })
+            </div>
+            <ul class="nav navbar-nav">
+                @*<li><a href="#">Register New Member</a></li>
+                    <li><a href="~/AdminRole/ApplyLeavesforAdmins">Apply Leave</a></li>*@
+                <li><a href="~/AdminRole/ViewLeavesByAdmin">Approve Leaves</a></li>
+                <li><a href="~/AdminRole/ViewApprovedLeavesByAdmin">View Approved Leaves</a></li>
+                @*<li><a href="~/AdminRole/AdminMoreFeature">More Features</a></li>
+                    <li><a href="~/TLRole/Logout">Logout</a></li>*@
+            </ul>
+        </div>
+    </nav>
+
+
+    <div class="container">
+        <b>PAG: @Session["Branch"]</b>
+        </br>
+        <b>Sub Silo: @Session["SubArea"]</b>
+       
+      
+        <div class="container" style="padding-top:50px">
+
+
+            <div class="table-responsive">
+                @using (Html.BeginForm())
+                {
+                    <table class="table table-striped table-bordered table-hover">
+
+                        <tr>
+                            @*<th>SI No.</th>*@
+                            <th>Project Name</th>
+                            <th>Planned Leaves</th>
+                            <th>UnPlanned Leaves</th>
+                            <th>Sick Leaves</th>
+
+
+                        </tr>
+
+
+                        <!-- Trigger the modal with a button -->
+                        @*<button type="button" class="btn btn-info btn-lg" data-toggle="modal" >Open Modal</button>*@
+                        @foreach (sampleMVC.Models.AdminRole item in Model.AppliedLeavesList)
+                        {
+                            <tr>
+                                <td>@Html.ActionLink(@item.ProjectName.ToString(), "ViewApprovedLeavesByAdminByProjName", "AdminRole", new { ProjName = @item.ProjectName, @class = "btn btn-info btn-lg", data_toggle = "tooltip", data_placement = "bottom", title = "All Leaves for this Project", data_target = "#myModal" }, null)</td>
+                                <td>@Html.ActionLink(@item.unplanned.ToString(), "ViewApprovedLeavesByAdminByProjNameByTOL", "AdminRole", new { ProjName = @item.ProjectName, TOL = "Planned", @class = "btn btn-info btn-lg", data_toggle = "tooltip", data_placement = "bottom", title = "Planned Leaves for this Project", data_target = "#myModal" }, null)</td>
+                                <td>@Html.ActionLink(@item.planned.ToString(), "ViewApprovedLeavesByAdminByProjNameByTOL", "AdminRole", new { ProjName = @item.ProjectName, TOL = "UnPlanned", @class = "btn btn-info btn-lg", data_toggle = "tooltip", data_placement = "bottom", title = "UnPlanned Leaves for this Project", data_target = "#myModal" }, null)</td>
+                                <td>@Html.ActionLink((@item.sick).ToString(), "ViewApprovedLeavesByAdminByProjNameByTOL", "AdminRole", new { ProjName = @item.ProjectName, TOL = "Sick", @class = "btn btn-info btn-lg", data_toggle = "tooltip", data_placement = "bottom", title = "Sick Leaves for this Project", data_target = "#myModal" }, null)</td>
+                                
+                            </tr>
+                        }
+                    </table>
+                    
+                }
+                    </div>
+                </div>
+            </div>
+    <script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+});
+    </script>
+
+
+        </body>
+    </html>

@@ -1,0 +1,607 @@
+﻿@model sampleMVC.Models.ApplyLeave
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "ApplyLeave";
+}
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/locale/en-ca.js"></script>
+    @Scripts.Render("~/bundles/jqueryui")
+    @Styles.Render("~/Content/cssjqryUi")
+    @Styles.Render("~/Content/Bootstrap.css")
+
+    <script>
+
+        var dateToday = new Date();
+        $(document).ready(function () {
+            $("#datepicker").datepicker("option", "minDate", 0);
+        });
+
+
+        function setPassword() {
+            var Pwd = document.getElementById("txtMSIDCnf").value;
+            $.ajax({
+                url: '@Url.Action("ChangePassword", "LTLogin")',
+                data: { 'Pwd': Pwd },
+                success: function (data) {
+                    if (data != "") {
+                        alert(data);
+                    }
+                    else {
+                        //alert("MSID is wrong try again ");
+                        //document.getElementById("txtMSID").value = "";
+                        //document.getElementById("txtEmailID").value = "";
+                    }
+                },
+                error: function (data) {
+                }
+            }
+            );
+        }
+
+
+        function logExtraHrs2() {
+            var hrs = document.getElementById("logExtraHrs1").value;
+            var logReason = document.getElementById("txtAreaReason").value;
+            var dateLogHrs = document.getElementById("datepickerForHrsLog").value;
+            $.ajax({
+                url: '@Url.Action("logExtraHrs", "LTLogin")',
+                data: { 'hrs': hrs, 'dateLogHrs': dateLogHrs, 'logReason': logReason },
+                success: function (data) {
+                    if (data != "") {
+                        alert("You Extra Hours are logged Successfully!!");
+                    }
+                    else {
+                        //alert("MSID is wrong try again ");
+                        //document.getElementById("txtMSID").value = "";
+                        //document.getElementById("txtEmailID").value = "";
+                    }
+                },
+                error: function (data) {
+                }
+            }
+            );
+        }
+
+
+        function checkLeaveForUser() {
+            var start = document.getElementById("datepicker1").value;
+            var oneDay = 24 * 60 * 60 * 1000;
+            var firstDate = new Date(start);
+
+
+            $.ajax({
+                url: '@Url.Action("checkLeave", "ApplyLeave")',
+                data: { 'SD': start },
+                success: function (data) {
+                    // put result of action into element with class "result"
+                    if (data != "") {
+                        alert("Your Leave is already applied. Go to view leave and update the screenshot");
+                        document.getElementById("datepicker1").value = "";
+                    }
+                },
+                error: function () {
+                    alert('Something went wrong');
+                }
+            });
+        }
+
+
+        function validatePass() {
+            var Pwdtest = document.getElementById("txtMSIDTest").value;
+            var PwdCnf = document.getElementById("txtMSIDCnf").value;
+            $.ajax({
+                url: '@Url.Action("validatePass", "ApplyLeave")',
+                data: { 'Pwdtest': Pwdtest, 'PwdCnf': PwdCnf },
+                success: function (data) {
+                    if (data != "") {
+                        alert(data);
+                        document.getElementById("txtMSIDTest").value = "";
+                        document.getElementById("txtMSIDCnf").value = "";
+                    }
+                    else {
+                        //alert("MSID is wrong try again ");
+                        //document.getElementById("txtMSID").value = "";
+                        //document.getElementById("txtEmailID").value = "";
+                    }
+                },
+                error: function (data) {
+                }
+            }
+            );
+        }
+
+        function getMSID() {
+            var name = document.getElementById("txtMSIDfinder").value;
+            alert(name);
+            $.ajax({
+                url: '@Url.Action("MSIDfinder", "ApplyLeave")',
+                data: { 'name': name },
+                success: function (data) {
+                    if (data != "") {
+
+                        document.getElementById("txtMSIDfinder").value = "";
+                    }
+                    else {
+                        //alert("MSID is wrong try again ");
+                        //document.getElementById("txtMSID").value = "";
+                        //document.getElementById("txtEmailID").value = "";
+                    }
+                },
+                error: function (data) {
+                }
+            }
+            );
+        }
+
+
+
+        function dayDiff() {
+            var start = document.getElementById("datepicker1").value;
+            var end = document.getElementById("datepicker2").value;
+            var oneDay = 24 * 60 * 60 * 1000;
+            var firstDate = new Date(start);
+            var secondDate = new Date(end);
+
+            $.ajax({
+                url: '@Url.Action("Sample", "ApplyLeave")',
+                data: { 'SD': start, 'ED': end },
+                success: function (data) {
+                    // put result of action into element with class "result"
+                    if (data > 0) {
+                        document.getElementById("TtlDays").value = data;
+                       // checkTOL();
+                    }
+                },
+                error: function () {
+                    alert('Error');
+                }
+            });
+
+            function checkTOL() {
+                //var TOL = document.getElementById("ddlTOL").value;
+                //alert(TOL);
+                //if (TOL == "Planned") {
+                //    document.getElementById("fileUpload").style.visibility == false;
+             
+                //}
+                //else {
+                //    document.getElementById("fileUpload").style.visibility == true;
+                //}
+
+
+
+                if (document.getElementById("ddlTOL").value == "Planned") {
+                    document.getElementById("fileUpload").style.display = "none";
+                    document.getElementById("fileUploadVali").style.display = "none";
+
+                    document.getElementById("hideUpload").style.display = "block";
+                    document.getElementById("hideUploadVali").style.display = "block";
+                }
+                else
+                    document.getElementById("fileUpload").style.display = "block";
+                return;
+            }
+
+
+            $(document).ready(function () {
+                //Attaching the change event of dropdown list
+                $('ddlTOL').change(function () {
+                    //Grab the value from dropdownlist
+                    if (this.value == "Planned") {
+                        //show the tr if value is others
+                        $('showToUplaod').show();
+                    } else {
+                        //Hide the tr if value is others
+                        $('hideToUplaod').hide();
+                    }
+
+                });
+            });
+
+            // testing purpose
+
+            $(document).ready(function () {
+                //Attaching the change event of dropdown list
+                $('#ddlTOL').change(function () {
+                    //Grab the value from dropdownlist
+                    if (this.value == "Planned") {
+                        //show the tr if value is others
+                        //    $('#fileUploadVali').show();
+                        $('#fileUpload').show();
+                    } else {
+                        //Hide the tr if value is others
+                        $('#fileUploadVali').hide();
+                        $('#fileUpload').show();
+                    }
+
+                });
+            });
+        }
+    </script>
+    <script type="text/javascript">
+        function preventBack() { window.history.forward(); }
+        setTimeout("preventBack()", 0);
+        window.onunload = function () { null };
+
+        function SuccessMsg() {
+            alert("Leaves Applied Successfully")
+        }
+    </script>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+
+    <title>ApplyLeaves</title>
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Leave Tracker", "checkRole", "ApplyLeave", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Log Extra Hours", "", "", new { @class = "navbar-brand", data_toggle = "modal", data_target = "#logHrs" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            Leave
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Apply Leave", "ApplyLeaves", "ApplyLeave")</li>
+                            <li>@Html.ActionLink("Apply Planned Leave", "applyOtherPlannedLeave", "ApplyLeave")</li>
+                            <li>@Html.ActionLink("View Leaves", "ViewLeaves", "ApplyLeave")</li>
+                            <li>@Html.ActionLink("Out of Office", "", "", new { data_toggle = "modal", data_target = "#appOtherOOOUser" })</li>
+                        </ul>
+                    </li>
+
+                </ul>
+                <div class="nav navbar-nav navbar-right">
+                    @*@Html.ActionLink("MSID Finder", "", "", new { @class = "navbar-brand", data_toggle = "modal", data_target = "#MSIDfinder" })*@
+                    @*@Html.ActionLink("MSID Finder", "MSIDFinderView", "ApplyLeave", new { @class = "glyphicon glyphicon-user" })*@
+                    @Html.ActionLink("Change Password", "", "", new { @class = "navbar-brand", data_toggle = "modal", data_target = "#myModal" })
+                    @Html.ActionLink("EditInfo", "EditInfo", "ApplyLeave", new { @class = "glyphicon glyphicon-user , navbar-brand" })
+                    @*@Html.ActionLink("View Info", "viewInfo", "ApplyLeave", new { @class = "glyphicon glyphicon-user , navbar-brand" })*@
+                    @Html.ActionLink("Logout", "Logout", "LTLogin", new { @class = "navbar-brand" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="padding-top:30px">
+        <h1 style="text-align:center">Apply Leave</h1>
+    </div>
+
+    <div style="padding-top:20px">
+        <div class="row">
+            <div class="col-lg-2 col-lg-offset-1">
+                <b>MSID: @Session["MSID"]</b>
+            </div>
+            <div class="col-lg-2">
+                <b>Name: @Session["FirstName"] @Session["LastName"]</b>
+            </div>
+            <div class="col-lg-2">
+                <b>PAG:  @Session["SubArea"]</b>
+            </div>
+            <div class="col-lg-2">
+                <b>Project: @Session["Project"]</b>
+            </div>
+            <div class="col-lg-2">
+                <b>Location: @Session["Location"]</b>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="nav navbar-nav navbar-right" style="padding-top:50px">
+        @Html.ActionLink("Export MSID List", "ExportToExcelForUser", "ApplyLeave", new { @class = "navbar-brand" })
+
+    </div>
+    <div class="container">
+
+        <div class="form-group" style="padding-top:30px">
+
+            @using (Html.BeginForm("ApplyLeaves", "ApplyLeave", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <table style="width:25%;margin-left:auto;margin-right:auto;border-collapse: separate;border-spacing: 5px 5px;">
+
+
+                    <tr>
+                        <td id="SD">@Html.TextBoxFor(m => m.StartDate, new { @class = "form-control", id = "datepicker1", type = "date", placeholder = Html.DisplayNameFor(n => n.StartDate), @onchange = "checkLeaveForUser()" })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.StartDate)</td>
+                    </tr>
+
+
+                    <tr>
+                        <td id="ED">@Html.TextBoxFor(m => m.EndDate, new { @class = "form-control", id = "datepicker2", type = "date", placeholder = Html.DisplayNameFor(n => n.EndDate) })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.EndDate)</td>
+                    </tr>
+
+
+                    <tr>
+                        <td>@Html.DropDownListFor(m => m.TypeOfLeaves, Model.TOL, "Select Type of Leave", new { @class = "form-control", id = "ddlTOL", @onchange = "dayDiff();" })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.TypeOfLeaves)</td>
+                    </tr>
+                   
+
+                    <tr>
+                        <td>@Html.TextBoxFor(m => m.TotalLeaves, new { @class = "form-control", id = "TtlDays", placeholder = Html.DisplayNameFor(n => n.TotalLeaves), @readonly = "readonly" })</td>
+
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.TotalLeaves)</td>
+                    </tr>
+
+
+                    <tr>
+                        <td>@Html.TextAreaFor(m => m.Reason, new { @class = "form-control", placeholder = Html.DisplayNameFor(n => n.Reason) })</td>
+                    </tr>
+
+                    <tr id="fileUpload">
+                        <td>
+                            <input type="file" name="file" class="input-files" required accept="image/jpeg,image/jpg,image/x-png" />
+                        </td>
+                    </tr>
+                    <tr id="fileUploadVali">
+                        <td>@Html.ValidationMessageFor(m => m.screenShot)</td>
+                    </tr>
+
+                    @using (Html.BeginForm())
+                    {
+                        <tr>
+                            <td>
+                                <button type="submit" class="btn btn-default">Apply</button>
+                                <button type="reset" class="btn btn-default">Reset</button>
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td></td>
+                        <td>
+                            @ViewBag.Message
+                        </td>
+                    </tr>
+                </table>
+            }
+
+        </div>
+    </div>
+    <div>
+
+    </div>
+
+
+    @using (Html.BeginForm())
+    {
+        <div class="container">
+            <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+            <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+            <script type="text/javascript">
+
+                $(document).ready(function () {
+                    $("#FirstName").autocomplete({
+                        source: function (request, response) {
+                            $.ajax({
+                                url: "/ApplyLeave/MSIDfinder",
+                                type: "POST",
+                                dataType: "json",
+                                data: { Prefix: request.term },
+                                success: function (data) {
+                                    response($.map(data, function (item) {
+                                        return { label: item.MSID, value: item.MSID };
+                                    }))
+
+                                }
+                            })
+                        },
+                        messages: {
+                            noResults: "", results: ""
+                        }
+                    });
+                });
+            </script>
+            <!-- Trigger the modal with a button -->
+            @*<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>*@
+
+            <!-- Modal -->
+            <div class="modal fade" id="MSIDfinder" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Please enter Name</h4>
+                        </div>
+                        <div class="modal-body">
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-horizontal">
+
+                                <hr />
+
+                                <div class="form-group">
+
+                                    <div class="col-md-12">
+                                        @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            @*<button type="submit" name=m class="btn btn-default" data-dismiss="modal" onclick="getMSID()">Get MSID</button>*@
+                            @*<button type="submit" name=m class="btn btn-default" data-dismiss="modal" onclick="getEmailID()">Submit</button>*@
+                            @*@Html.ActionLink("Submit", "forgetPassword", "LTLogin", new { @class = "btn btn-default", @data_dismiss = "modal"})*@
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="container">
+
+            <!-- Trigger the modal with a button -->
+            @*<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>*@
+
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Please enter New Password</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                <br />
+                            </p>
+
+                            @Html.TextBoxFor(m => m.Pwd, new { @class = "form-control", id = "txtMSIDTest", type = "password", placeholder = Html.DisplayNameFor(n => n.Pwd) })
+                            @Html.TextBoxFor(m => m.PwdCnf, new { @class = "form-control", id = "txtMSIDCnf", type = "password", placeholder = Html.DisplayNameFor(n => n.PwdCnf), @onchange = "validatePass()" })
+                            @*<button type="submit" name=m class="btn btn-default" formaction="~/LTLogin/forgetPassword" formmethod="post">Submit</button>*@
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" name=m class="btn btn-default" data-dismiss="modal" onclick="setPassword()">Change</button>
+                            @*<button type="submit" name=m class="btn btn-default" data-dismiss="modal" onclick="getEmailID()">Submit</button>*@
+                            @*@Html.ActionLink("Submit", "forgetPassword", "LTLogin", new { @class = "btn btn-default", @data_dismiss = "modal"})*@
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="container">
+
+            <!-- Trigger the modal with a button -->
+            @*<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>*@
+
+            <!-- Modal -->
+            <div class="modal fade" id="logHrs" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Please Log Extra Working Hours</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                Please mentioned Extra Hours you worked today<br />
+                                Ex : Enter 1 in TextBox,if you worked for an extra hour today
+                            </p>
+                            @Html.TextBoxFor(m => m.dateForHrsLog, new { @class = "form-control", id = "datepickerForHrsLog", type = "date", placeholder = Html.DisplayNameFor(n => n.dateForHrsLog) })
+                            @Html.ValidationMessageFor(m => m.dateForHrsLog)
+                            @Html.TextBoxFor(m => m.logExtraHrs, new { @class = "form-control", id = "logExtraHrs1", type = "number", step = "0.5", min = "0", max = "5", placeholder = Html.DisplayNameFor(n => n.logExtraHrs) })
+                            @Html.TextAreaFor(m => m.ExtraHrsReason, new { @class = "form-control", id = "txtAreaReason", type = "text", placeholder = Html.DisplayNameFor(n => n.ExtraHrsReason) })
+                            @Html.ValidationMessageFor(m => m.ExtraHrsReason)
+                            @*@Html.TextBoxFor(m => m.PwdCnf, new { @class = "form-control", id = "txtMSIDCnf", type = "password", placeholder = Html.DisplayNameFor(n => n.PwdCnf), @onchange = "validatePass()" })*@
+                            @*<button type="submit" name=m class="btn btn-default" formaction="~/LTLogin/forgetPassword" formmethod="post">Submit</button>*@
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" name=m class="btn btn-default" data-dismiss="modal" onclick="logExtraHrs2()">Save</button>
+                            @*<button type="submit" name=m class="btn btn-default" data-dismiss="modal" onclick="getEmailID()">Submit</button>*@
+                            @*@Html.ActionLink("Submit", "forgetPassword", "LTLogin", new { @class = "btn btn-default", @data_dismiss = "modal"})*@
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+
+        <script>
+            function appOtherOOOUser() {
+                var msad = document.getElementById("txtOOOUser").value;
+                $.ajax({
+                    url: '@Url.Action("applyOOOForOthersUser", "ApplyLeave")',
+                    data: { 'msad': msad },
+                    success: function (data) {
+                        if (data != "") {
+                            alert(data);
+                        }
+                        else {
+                            //alert("MSID is wrong try again ");
+                            //document.getElementById("txtMSID").value = "";
+                            //document.getElementById("txtEmailID").value = "";
+                        }
+                    },
+                    error: function (data) {
+                    }
+                }
+                );
+            }
+        </script>
+
+
+        <div class="container">
+
+            <!-- Trigger the modal with a button -->
+            @*<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>*@
+
+            <!-- Modal -->
+            <div class="modal fade" id="appOtherOOOUser" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Please enter MSID</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                Please Enter MSID of Employee, you want to apply leave<br />
+                                Ex:"96MHY"<br />
+
+                            </p>
+
+                            @Html.TextBoxFor(m => m.MSID, new { @class = "form-control", id = "txtOOOUser", type = "text", placeholder = Html.DisplayNameFor(n => n.MSID) })
+                            @*@Html.TextBoxFor(m => m.PwdCnf, new { @class = "form-control", id = "txtMSIDCnf", type = "password", placeholder = Html.DisplayNameFor(n => n.PwdCnf), @onchange = "validatePass()" })*@
+                            @*<button type="submit" name=m class="btn btn-default" formaction="~/LTLogin/forgetPassword" formmethod="post">Submit</button>*@
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" name=m class="btn btn-default" data-dismiss="modal" onclick="appOtherOOOUser()">Submit</button>
+                            @*<button type="submit" name=m class="btn btn-default" data-dismiss="modal" onclick="getEmailID()"></button>*@
+                            @*@Html.ActionLink("Submit", "forgetPassword", "LTLogin", new { @class = "btn btn-default", @data_dismiss = "modal"})*@
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    }
+
+</body>
+
+</html>

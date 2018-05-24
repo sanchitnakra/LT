@@ -1,0 +1,119 @@
+﻿@model sampleMVC.Models.ApplyLeave
+
+@{
+    Layout = null;
+    ViewBag.Title = "ApplyLeave";
+}
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    @Styles.Render("~/Content/Bootstrap.css")
+    @Scripts.Render("~/bundles/angular")
+    <title>ApplyLeaves</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body ng-controller="MyCntl">
+    <script type="text/javascript">
+            function preventBack() { window.history.forward(); }
+            setTimeout("preventBack()", 0);
+            window.onunload = function () { null };
+    </script>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="~/AdminRole/AdminRole">Leave Tracker</a>
+            </div>
+            <div class="nav navbar-nav navbar-right">
+                @Html.ActionLink("Logout", "Logout", "LTLogin", new { @class = "navbar-brand" })
+            </div>
+            <ul class="nav navbar-nav">
+                @*<li><a href="#">Register New Member</a></li>
+            <li><a href="~/AdminRole/ApplyLeavesforAdmins">Apply Leave</a></li>*@
+                <li><a href="~/AdminRole/ViewLeavesByAdmin">Approve Leaves</a></li>
+                <li><a href="~/AdminRole/ViewApprovedLeavesByAdmin">View Applied Leaves</a></li>
+                @*<li><a href="~/AdminRole/AdminMoreFeature">More Features</a></li>
+            <li><a href="~/TLRole/Logout">Logout</a></li>*@
+            </ul>
+        </div>
+    </nav>
+
+
+    <div class="container" style="padding-top:150px">
+        <h1 style="text-align:center">Apply Leave</h1>
+        <div class="form-group" style="padding-top:15px">
+
+            @using (Html.BeginForm("Index", "LTLogin", FormMethod.Post))
+            {
+
+                <table style="width:25%;margin-left:auto;margin-right:auto;border-collapse: separate;border-spacing: 5px 5px;">
+                    <tr>
+                        <td>@Html.TextBoxFor(m => m.MSID, new { @class = "form-control", placeholder = Html.DisplayNameFor(n => n.MSID) })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.MSID)</td>
+                    </tr>
+
+
+                    <tr>
+                        <td>@Html.TextBoxFor(m => m.StartDate, new { @class = "form-control", placeholder = Html.DisplayNameFor(n => n.StartDate) })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.StartDate)</td>
+                    </tr>
+
+
+                    <tr>
+                        <td>@Html.TextBoxFor(m => m.EndDate, new { @class = "form-control", placeholder = Html.DisplayNameFor(n => n.EndDate)})</td>
+                        
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.EndDate)</td>
+                    </tr>
+
+
+                    
+
+
+                    <tr>
+                        <td>@Html.TextBoxFor(m => m.TypeOfLeaves, new { @class = "form-control", placeholder = Html.DisplayNameFor(n => n.TypeOfLeaves) })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.TypeOfLeaves)</td>
+                    </tr>
+
+
+                    <tr>
+                        <td>@Html.TextBoxFor(m => m.TotalLeaves, new { @class = "form-control", placeholder = Html.DisplayNameFor(n => n.TotalLeaves) })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.TotalLeaves)</td>
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+                            <button type="submit" class="btn btn-default">Apply</button>
+                            <button type="reset" class="btn btn-default">Reset</button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td></td>
+                        <td>
+                            @ViewBag.Message
+                        </td>
+                    </tr>
+                </table>
+            }
+        </div>
+    </div>
+</body>
+</html>

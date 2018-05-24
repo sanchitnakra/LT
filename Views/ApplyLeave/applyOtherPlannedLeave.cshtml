@@ -1,0 +1,326 @@
+﻿@model sampleMVC.Models.ApplyLeave
+
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/locale/en-ca.js"></script>
+    @Scripts.Render("~/bundles/jqueryui")
+    @Styles.Render("~/Content/cssjqryUi")
+    @Styles.Render("~/Content/Bootstrap.css")
+    <script>
+        var dateToday = new Date();
+        $(document).ready(function () {
+            $("#datepicker").datepicker("option", "minDate", 0);
+        });
+
+
+        function setPassword() {
+            var Pwd = document.getElementById("txtMSIDCnf").value;
+            $.ajax({
+                url: '@Url.Action("ChangePassword", "LTLogin")',
+                data: { 'Pwd': Pwd },
+                success: function (data) {
+                    if (data != "") {
+                        alert(data);
+                    }
+                    else {
+                        //alert("MSID is wrong try again ");
+                        //document.getElementById("txtMSID").value = "";
+                        //document.getElementById("txtEmailID").value = "";
+                    }
+                },
+                error: function (data) {
+                }
+            }
+            );
+        }
+
+
+        function logExtraHrs2() {
+
+            var hrs = document.getElementById("logExtraHrs1").value;
+            var logReason = document.getElementById("txtAreaReason").value;
+            var dateLogHrs = document.getElementById("datepickerForHrsLog").value;
+
+            $.ajax({
+                url: '@Url.Action("logExtraHrs", "LTLogin")',
+                data: { 'hrs': hrs, 'logReason': logReason, 'dateLogHrs': dateLogHrs },
+                success: function (data) {
+                    if (data != "") {
+                        alert("You Extra Hours are logged Successfully!!");
+                    }
+                    else {
+                        //alert("MSID is wrong try again ");
+                        //document.getElementById("txtMSID").value = "";
+                        //document.getElementById("txtEmailID").value = "";
+                    }
+                },
+                error: function (data) {
+                }
+            }
+            );
+        }
+
+
+        function appOtherOOO() {
+
+            var MSID = document.getElementById("txtOOO").value;
+            $.ajax({
+                url: '@Url.Action("applyOOOForOthers", "ApplyLeave")',
+                data: { 'MSID': MSID },
+                success: function (data) {
+                    if (data != "") {
+                        alert(data);
+                    }
+                    else {
+                        //alert("MSID is wrong try again ");
+                        //document.getElementById("txtMSID").value = "";
+                        //document.getElementById("txtEmailID").value = "";
+                    }
+                },
+                error: function (data) {
+                }
+            }
+            );
+        }
+
+
+
+
+
+        function validatePass() {
+            var Pwdtest = document.getElementById("txtMSIDTest").value;
+            var PwdCnf = document.getElementById("txtMSIDCnf").value;
+            $.ajax({
+                url: '@Url.Action("validatePass", "ApplyLeave")',
+                data: { 'Pwdtest': Pwdtest, 'PwdCnf': PwdCnf },
+                success: function (data) {
+                    if (data != "") {
+                        alert(data);
+                        document.getElementById("txtMSIDTest").value = "";
+                        document.getElementById("txtMSIDCnf").value = "";
+                    }
+                    else {
+                        //alert("MSID is wrong try again ");
+                        //document.getElementById("txtMSID").value = "";
+                        //document.getElementById("txtEmailID").value = "";
+                    }
+                },
+                error: function (data) {
+                }
+            }
+            );
+        }
+
+
+
+
+        function dayDiffOther() {
+            var startD = document.getElementById("startD").value;
+            var endD = document.getElementById("endD").value;
+            var oneDay = 24 * 60 * 60 * 1000;
+            var firstDate = new Date(startD);
+            var secondDate = new Date(endD);
+
+            $.ajax({
+                url: '@Url.Action("SampleOther", "ApplyLeave")',
+                data: { 'SD1': startD, 'ED1': endD },
+                success: function (data) {
+                    // put result of action into element with class "result"
+                    if (data > 0) {
+                        document.getElementById("TtlDaysOther").value = data;
+                    }
+                },
+                error: function () {
+                    alert('Error');
+                }
+            });
+        }
+
+    </script>
+    <script type="text/javascript">
+        function preventBack() { window.history.forward(); }
+        setTimeout("preventBack()", 0);
+        window.onunload = function () { null };
+
+        function SuccessMsg() {
+            alert("Leaves Applied Successfully")
+        }
+    </script>
+    <title>ApplyLeaves</title>
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Home Page", "checkRole", "ApplyLeave", new { area = "" }, new { @class = "navbar-brand" })
+                @*@Html.ActionLink("Log Extra Hours", "", "", new { @class = "navbar-brand", data_toggle = "modal", data_target = "#logHrs" })*@
+                @*@Html.ActionLink("Apply Other's OOO", "", "", new { @class = "navbar-brand", data_toggle = "modal", data_target = "#appOtherOOO" })*@
+            </div>
+            <div class="navbar-collapse collapse">
+                @*<ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            Leave
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Apply Leave", "ApplyLeaves", "ApplyLeave")</li>
+                            <li>@Html.ActionLink("View Leaves", "ViewLeaves", "ApplyLeave")</li>
+                        </ul>
+                    </li>
+
+                </ul>*@
+
+                    @*<ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                Leave
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink("Apply Other's OOO", "", "", new { @class = "navbar-brand", data_toggle = "modal", data_target = "#appOtherOOO" })</li>
+                                <li>@Html.ActionLink("Apply Other's Planned Leave", "ViewLeaves", "ApplyLeave")</li>
+                            </ul>
+                        </li>
+
+                    </ul>*@
+                <div class="nav navbar-nav navbar-right">
+                    @*<button type="button" class="navbar-brand" data-toggle="modal" data-target="#myModal">Change Password</button>*@
+                    @*<button type="button" class="navbar-brand" data-toggle="modal" data-target="#myModal">Change Password</button>*@
+                    @Html.ActionLink("Logout", "Logout", "LTLogin", new { @class = "navbar-brand" })
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="nav navbar-nav navbar-right" style="padding-top:50px">
+        @*@Html.ActionLink("Export Defaulter List", "ExportToExcelForTL", "ApplyLeave", new { @class = "navbar-brand" })*@
+
+    </div>
+    <div style="padding-top:30px">
+        <h1 style="text-align:center">Apply Leave</h1>
+    </div>
+
+    <div style="padding-top:20px">
+        <div class="row">
+            <div class="col-lg-2 col-lg-offset-1">
+                <b>MSID: @Session["MSID"]</b>
+            </div>
+            <div class="col-lg-2">
+                <b>Name: @Session["FirstName"] @Session["LastName"]</b>
+            </div>
+            <div class="col-lg-2">
+                <b>Branch: @Session["Branch"]</b>
+            </div>
+            <div class="col-lg-2">
+                <b>Project: @Session["Project"]</b>
+            </div>
+            <div class="col-lg-2">
+                <b>Location: @Session["Location"]</b>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="container">
+
+        <div class="form-group" style="padding-top:30px">
+
+            @using (Html.BeginForm("ApplyLeaves", "ApplyLeave", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <table style="width:25%;margin-left:auto;margin-right:auto;border-collapse: separate;border-spacing: 5px 5px;">
+
+                    <tr>
+                        <td>@Html.TextBoxFor(m => m.MSID, new { @class = "form-control", type = "text", placeholder = Html.DisplayNameFor(n => n.MSID) })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.MSID)</td>
+                    </tr>
+
+                    <tr>
+                        <td id="SD">@Html.TextBoxFor(m => m.StartDate, new { @class = "form-control", id = "startD", type = "date", placeholder = Html.DisplayNameFor(n => n.StartDate) })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.StartDate)</td>
+                    </tr>
+
+
+                    <tr>
+                        <td id="ED">@Html.TextBoxFor(m => m.EndDate, new { @class = "form-control", id = "endD", type = "date", placeholder = Html.DisplayNameFor(n => n.EndDate) })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.EndDate)</td>
+                    </tr>
+
+
+                    @*<tr>
+                        <td>@Html.DropDownListFor(m => m.TypeOfLeaves, Model.TOL, "Select Type of Leave", new { @class = "form-control", @onchange = "dayDiffOther();" })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.TypeOfLeaves)</td>
+                    </tr>*@
+
+
+                    @*<tr>
+                            <td>@Html.TextBoxFor(m => m.TotalLeaves, new { @class = "form-control", id = "TtlDaysOther", placeholder = Html.DisplayNameFor(n => n.TotalLeaves), @readonly = "readonly" })</td>
+
+                        </tr>
+                        <tr>
+                            <td>@Html.ValidationMessageFor(m => m.TotalLeaves)</td>
+                        </tr>*@
+
+
+                    <tr>
+                            <td>@Html.TextAreaFor(m => m.Reason, new { @class = "form-control", placeholder = Html.DisplayNameFor(n => n.Reason) })</td>
+                        </tr>
+
+                   
+                    @*<tr>
+                            <td>
+                                <input type="file" name="file" class="input-files" required accept="image/jpeg,image/jpg,image/x-png" />
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>@Html.ValidationMessageFor(m => m.screenShot)</td>
+                        </tr>*@
+
+
+                    <tr>
+
+                        <td>
+                            <button type="submit" class="btn btn-default">Apply</button>
+                            <button type="reset" class="btn btn-default">Reset</button>
+                      
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            @ViewBag.Message
+                        </td>
+                    </tr>
+                </table>
+            }
+
+        </div>
+    </div>
+    <div>
+
+    </div>
+</body>
+</html>

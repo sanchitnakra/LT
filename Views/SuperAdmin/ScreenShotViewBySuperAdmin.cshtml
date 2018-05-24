@@ -1,0 +1,29 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ScreenShot</title>
+</head>
+<body>
+   
+    @*<div class="nav navbar-nav navbar-left">
+        <button type="button" onclick="location.href='@Url.Action("PAGWiseViewForSuperAdminByProjName", "SuperAdmin")'">Back</button>
+    </div>*@
+    <div class="nav navbar-nav navbar-left">
+        
+        @Html.ActionLink("Back", "PAGWiseViewForSuperAdminByProjName", "SuperAdmin", new {  PAGName = Session["PAGName"], ProjName = Session["ProjName"],  TOL = Session["TOL"],  @class = "navbar-brand" },null)
+       
+    </div>
+    <div style="padding-top:15px; align-content:center">
+
+        <img src="data:image/jpg;base64,@(Convert.ToBase64String(Model.imageSrc11))" alt="Image" width="800" height="800" />
+
+    </div>
+</body> 
+</html>

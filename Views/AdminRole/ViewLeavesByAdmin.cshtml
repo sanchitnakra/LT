@@ -1,0 +1,111 @@
+﻿@model sampleMVC.Models.ApplyLeave
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AdminRoleMainPage</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <script type="text/javascript">
+            function preventBack() { window.history.forward(); }
+            setTimeout("preventBack()", 0);
+            window.onunload = function () { null };
+    </script>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="~/AdminRole/AdminRole">Leave Tracker</a>
+            </div>
+            <div class="nav navbar-nav navbar-right">
+                @Html.ActionLink("Logout", "Logout", "LTLogin", new { @class = "navbar-brand" })
+            </div>
+            <ul class="nav navbar-nav">
+                @*<li><a href="#">Register New Member</a></li>
+                    <li><a href="~/AdminRole/ApplyLeavesforAdmins">Apply Leave</a></li>*@
+                <li><a href="~/AdminRole/ViewLeavesByAdmin">Approve Leaves</a></li>
+                <li><a href="~/AdminRole/ViewApprovedLeavesByAdmin">View Approved Leaves</a></li>
+                @*<li><a href="~/AdminRole/AdminMoreFeature">More Features</a></li>
+                    <li><a href="~/TLRole/Logout">Logout</a></li>*@
+            </ul>
+        </div>
+    </nav>
+
+
+
+
+
+    <div class="container" style="padding-top:50px">
+        <h1 style="text-align:center">Applied Leaves</h1>
+
+        <div class="table-responsive">
+            @using (Html.BeginForm("ApproveLeavesByAdmin", "AdminRole"))
+            {
+                <table class="table table-striped table-bordered table-hover">
+                    <tr>
+                        @*<th>SI No.</th>*@
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Type of Leave</th>
+                        <th>No. Of Days</th>
+                        <th>Reason</th>
+                        <th>ScreenShot</th>
+                        <th>Action Required</th>
+
+                    </tr>
+
+                    @foreach (sampleMVC.Models.ApplyLeave item in Model.LeaveList)
+                {
+                        <tr>
+                            <td>
+                                @item.FirstName
+                            </td>
+                            <td>
+                                @item.LastName
+                            </td>
+                            <td>
+                                @item.StartDate.ToShortDateString()
+                            </td>
+                            <td>
+                                @item.EndDate.ToShortDateString()
+                            </td>
+                            <td>
+                                @item.TypeOfLeaves
+                            </td>
+                            <td>
+                                @item.TotalLeaves
+                            </td>
+                            <td>
+                                @item.Reason
+                            </td>
+                            <td>
+                                <a href="@Url.Action("ScreenShot", "AdminRole", new { id = item.sNo })">
+                                    <img src="data:image/jpg;base64,@(Convert.ToBase64String(item.imageSrc11))" alt="Image" width="50" height="50" />
+                                </a>
+                            </td>
+
+                            <td>
+                                @Html.ActionLink("Approve", "ApproveLeavesByAdmin", "AdminRole", new { id = item.sNo }, null)
+                                @Html.ActionLink("Reject", "RejectLeavesByAdmin", "AdminRole", new { id = item.sNo }, new { onclick = "return confirm('Are you sure you wish to delete this article?');"})
+                            </td>
+                        </tr>
+                    }
+                </table>
+            }
+        </div>
+
+    </div>
+
+
+</body>
+</html>

@@ -1,0 +1,166 @@
+﻿@model sampleMVC.Models.login
+@{
+    Layout = "~/Views/Shared/MainPage.cshtml";
+    ViewBag.Title = "Login";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+    @Styles.Render("~/Content/Bootstrap.css")
+
+    <script>
+
+        function getEmailID() {
+            var MSID1 = document.getElementById("txtMSID1").value;
+            $.ajax({
+                url: '@Url.Action("forgetPassword", "LTLogin")',
+                data: { 'MSID': MSID1 },
+                success: function (data) {
+                    if (data != "") {
+                        alert(data);
+                    }
+                    else {
+                        //alert("MSID is wrong try again ");
+                        //document.getElementById("txtMSID").value = "";
+                        //document.getElementById("txtEmailID").value = "";
+                    }
+                },
+                error: function (data) {
+                }
+            }
+            );
+        }
+
+        function checkPassword() {
+            var MSID = document.getElementById("txtMSID").value;
+            $.ajax({
+                url: '@Url.Action("checkPassword", "LTLogin")',
+                data: { 'MSID': MSID },
+                success: function (data) {
+                    // put result of action into element with class "result"
+
+                    if (data == "") {
+                        alert("Please Register to Login");
+                        document.getElementById("txtMSID").value = "";
+                    }
+                },
+                error: function (data) {
+                    //if (data = "") {
+                    //    alert("Something Went Wrong");
+                }
+            }
+            )
+        };
+
+        function validatMSID() {
+            var MSID = document.getElementById("txtMSID1").value;
+            $.ajax({
+                url: '@Url.Action("validateMSID", "LTLogin")',
+                data: { 'MSID': MSID },
+                success: function (data) {
+                    // put result of action into element with class "result"
+
+                    if (data != "") {
+                        alert(data);
+                        document.getElementById("txtMSID1").value = "";
+                    }
+                },
+                error: function (data) {
+                    //if (data = "") {
+                    //    alert("Something Went Wrong");
+                }
+            }
+            )
+        };
+
+
+
+    </script>
+</head>
+<body>
+
+    <div class="container" style="padding-top:150px">
+        <h1 style="text-align:center"> Login </h1>
+        <div class="form-group" style="padding-top:15px">
+
+            @using (Html.BeginForm())
+            {
+                <table style="width:25%;margin-left:auto;margin-right:auto;border-collapse: separate;border-spacing: 5px 5px;">
+                    <tr>
+                        <td>@Html.TextBoxFor(m => m.MSID, new { @class = "form-control", id = "txtMSID", placeholder = Html.DisplayNameFor(n => n.MSID), @onchange = "checkPassword()" }) </td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.MSID)</td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.PasswordFor(m => m.pwd, new { @class = "form-control", placeholder = Html.DisplayNameFor(n => n.pwd) }) </td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.pwd)</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="submit" name=m class="btn btn-default" formaction="~/LTLogin/Index" formmethod="post">Login</button>
+                            <button type="submit" name="Register" class="btn btn-default" formaction="~/LTLogin/RegisterRedirect" formmethod="post">Register</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" class="btn btn-link" data-toggle="modal" data-target="#myModal">Forgot Password?</button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="color:red">
+                            @ViewBag.Message
+                        </td>
+
+                    </tr>
+                </table>
+            }
+
+            @using (Html.BeginForm())
+            {
+                <div class="container">
+
+                    <!-- Trigger the modal with a button -->
+                    @*<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>*@
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="myModal" role="dialog">
+                        <div class="modal-dialog">
+
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Forgot Password</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Please Enter MSID</p>
+
+                                    @Html.TextBoxFor(m => m.MSID, new { @class = "form-control", id = "txtMSID1", placeholder = Html.DisplayNameFor(n => n.MSID), @onchange = "validatMSID()" })
+                                    @*<button type="submit" name=m class="btn btn-default" formaction="~/LTLogin/forgetPassword" formmethod="post">Submit</button>*@
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" name=m class="btn btn-default" data-dismiss="modal" onclick="getEmailID()">Submit</button>
+                                    @*<button type="submit" name=m class="btn btn-default" data-dismiss="modal" onclick="getEmailID()">Submit</button>*@
+                                    @*@Html.ActionLink("Submit", "forgetPassword", "LTLogin", new { @class = "btn btn-default", @data_dismiss = "modal"})*@
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            }
+        </div>
+    </div>
+</body>
+</html>

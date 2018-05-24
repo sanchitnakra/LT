@@ -1,0 +1,86 @@
+﻿@model sampleMVC.Models.SuperAdmin
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>GetPagViewBySuperAdminByPAGName</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <script type="text/javascript">
+        function preventBack() { window.history.forward(); }
+        setTimeout("preventBack()", 0);
+        window.onunload = function () { null };
+    </script>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                @*<a class="navbar-brand" href="#"></a>*@
+                @Html.ActionLink("Leave Tracker", "GetPagViewBySuperAdmin", "SuperAdmin", new { @class = "navbar-brand" })
+
+
+            </div>
+            <div class="nav navbar-nav navbar-right">
+                @Html.ActionLink("Logout", "Logout", "LTLogin", new { @class = "navbar-brand" })
+            </div>
+            <ul class="nav navbar-nav">
+                @*<li><a href="#">Register New Member</a></li>
+                    <li><a href="~/AdminRole/ApplyLeavesforAdmins">Apply Leave</a></li>*@
+                @*<li><a href="~/AdminRole/ViewLeavesByAdmin">Approve Leaves</a></li>
+                    <li><a href="~/AdminRole/ViewApprovedLeavesByAdmin">View Applied Leaves</a></li>*@
+                @*<li><a href="~/AdminRole/AdminMoreFeature">More Features</a></li>
+                    <li><a href="~/TLRole/Logout">Logout</a></li>*@
+            </ul>
+        </div>
+    </nav>
+    <div class="nav navbar-nav navbar-left">
+        @Html.ActionLink("Back", "PAGWiseViewForSuperAdminByProjName", "SuperAdmin", null, new { href = Request.UrlReferrer, @class = "navbar-brand" })
+    </div>
+
+    <div class="nav navbar-nav navbar-right">
+
+
+        @Html.ActionLink("Export To Excel", "ExportToExcelForSuperAdminByPAGName", "SuperAdmin", new { @class = "navbar-brand" })
+
+    </div>
+
+    <div class="container" style="padding-top:150px">
+
+
+        <div class="table-responsive">
+            @using (Html.BeginForm())
+            {
+                <table class="table table-striped table-bordered table-hover">
+                    <tr>
+                        <th>Project Name</th>
+                        <th>Planned</th>
+                        <th>UnPlanned</th>
+                        <th>Sick</th>
+                        <th>Total Leaves</th>
+                    </tr>
+
+                    @foreach (sampleMVC.Models.SuperAdmin item in Model.PAGWiseViewForSuperAdminByPAGNameList)
+                    {
+                        <tr>
+                            <td>@Html.ActionLink(@item.ProjectName, "PAGWiseViewForSuperAdminByProjName", "SuperAdmin", new { PAGName = @item.Branch, ProjName = @item.ProjectName }, null)</td>
+                            <td>@Html.ActionLink(@item.planned.ToString(), "PAGWiseViewForSuperAdminByProjNameByTOL", "SuperAdmin", new { PAGName = @item.Branch, ProjName = @item.ProjectName, TOL = "planned" }, null)</td>
+                            <td>@Html.ActionLink(@item.unplanned.ToString(), "PAGWiseViewForSuperAdminByProjNameByTOL", "SuperAdmin", new { PAGName = @item.Branch, ProjName = @item.ProjectName, TOL = "unplanned" }, null)</td>
+                            <td>@Html.ActionLink(@item.sick.ToString(), "PAGWiseViewForSuperAdminByProjNameByTOL", "SuperAdmin", new { PAGName = @item.Branch, ProjName = @item.ProjectName, TOL = "sick" }, null)</td>
+                            <td>@Html.ActionLink(@item.totalLeaves.ToString(), "PAGWiseViewForSuperAdminByProjName", "SuperAdmin", new { PAGName = @item.Branch, ProjName = @item.ProjectName }, null)</td>
+                        </tr>
+                    }
+                </table>
+            }
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,182 @@
+﻿@model sampleMVC.Models.ApplyLeave
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "EditLeave";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>editLeaves</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/locale/en-ca.js"></script>
+    @Scripts.Render("~/bundles/jqueryui")
+    @Styles.Render("~/Content/cssjqryUi")
+    @Styles.Render("~/Content/Bootstrap.css")
+    <script>
+        function dayDif() {
+            var start1 = document.getElementById("datepicker11").value;
+            var end1 = document.getElementById("datepicker22").value;
+            var oneDay1 = 24 * 60 * 60 * 1000;
+            var firstDate1 = new Date(start1);
+            var secondDate1 = new Date(end1);
+
+            $.ajax({
+                url: '@Url.Action("Sample", "ApplyLeave")',
+                data: { 'SD': start1, 'ED': end1 },
+                success: function (data) {
+                    // put result of action into element with class "result"
+                    if (data > 0) {
+                        alert(data);
+                        document.getElementById("TtlDays1").value = data;
+                    }
+                },
+                error: function () {
+                    alert('Error');
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Leave Tracker", "", "", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            Leave
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Apply Leave", "ApplyLeaves", "ApplyLeave")</li>
+                            <li>@Html.ActionLink("View Leaves", "ViewLeaves", "ApplyLeave")</li>
+                        </ul>
+                    </li>
+
+                </ul>
+                <div class="nav navbar-nav navbar-right">
+                    @*<button type="button" class="navbar-brand" data-toggle="modal" data-target="#myModal">Change Password</button>*@
+                    @*<button type="button" class="navbar-brand" data-toggle="modal" data-target="#myModal">Change Password</button>*@
+                    @*@Html.ActionLink("Change Password", "", "", new { @class = "navbar-brand", data_toggle = "modal", data_target = "#myModal" })*@
+                    @Html.ActionLink("Logout", "Logout", "LTLogin", new { @class = "navbar-brand" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="padding-top:30px">
+        <h1 style="text-align:center">Edit Leave</h1>
+    </div>
+
+    @*<div style="padding-top:20px">
+            <div class="row">
+                <div class="col-lg-2 col-lg-offset-1">
+                    <b>MSID: @Session["MSID"]</b>
+                </div>
+                <div class="col-lg-2">
+                    <b>Name: @Session["FirstName"] @Session["LastName"]</b>
+                </div>
+                <div class="col-lg-2">
+                    <b>Branch: @Session["Branch"]</b>
+                </div>
+                <div class="col-lg-2">
+                    <b>Project: @Session["Project"]</b>
+                </div>
+                <div class="col-lg-2">
+                    <b>Location: @Session["Location"]</b>
+                </div>
+
+            </div>
+
+        </div>*@
+    <div class="container">
+
+        <div class="form-group" style="padding-top:30px">
+
+            @using (Html.BeginForm("ApplyLeaves", "ApplyLeave", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <table style="width:25%;margin-left:auto;margin-right:auto;border-collapse: separate;border-spacing: 5px 5px;">
+
+
+                    <tr>
+                        <td id="SD">@Html.TextBoxFor(m => m.StartDate, new { @class = "form-control", id = "datepicker11", type = "date", placeholder = Html.DisplayNameFor(n => n.StartDate) })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.StartDate)</td>
+                    </tr>
+
+
+                    <tr>
+                        <td id="ED">@Html.TextBoxFor(m => m.EndDate, new { @class = "form-control", id = "datepicker22", type = "date", placeholder = Html.DisplayNameFor(n => n.EndDate) })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.EndDate)</td>
+                    </tr>
+
+
+                    <tr>
+                        <td>@Html.DropDownListFor(m => m.TypeOfLeaves, Model.TOL, "Select Type of Leave", new { @class = "form-control", @onchange = "dayDif();" })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.TypeOfLeaves)</td>
+                    </tr>
+
+
+                    <tr>
+                        <td>@Html.TextBoxFor(m => m.TotalLeaves, new { @class = "form-control", id = "TtlDays1", placeholder = Html.DisplayNameFor(n => n.TotalLeaves), @readonly = "readonly" })</td>
+
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.TotalLeaves)</td>
+                    </tr>
+
+
+                    <tr>
+                        <td>@Html.TextAreaFor(m => m.Reason, new { @class = "form-control", placeholder = Html.DisplayNameFor(n => n.Reason) })</td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <input type="file" name="file" class="input-files" required accept="image/jpeg,image/jpg,image/x-png" />
+
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.screenShot)</td>
+                    </tr>
+                    
+
+                    <tr>
+
+                        <td>
+                            <button type="submit" name=m class="btn btn-default" formaction="~/ApplyLeave/updateLeaves" formmethod="post">Save</button>
+                            @*<button type="submit" class="btn btn-default">Save</button>*@
+                            <button type="reset" class="btn btn-default">Reset</button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td></td>
+                        <td>
+                            @ViewBag.Message
+                        </td>
+                    </tr>
+                </table>
+
+            }
+        </div>
+    </div>
+    
+</body>
+</html>

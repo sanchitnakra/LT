@@ -1,0 +1,51 @@
+﻿@model sampleMVC.Models.ApplyLeave
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#FirstName").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+
+                    url: "/ApplyLeave/MSIDfinder",
+                    type: "POST",
+                    dataType: "json",
+                    data: { Prefix: request.term },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item.MSID, value: item.MSID, value:item.LastName };
+                        }))
+
+                    }
+                })
+            },
+            messages: {
+                noResults: "", results: ""
+            }
+        });
+    });
+</script>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        <hr />
+
+        <div class="form-group">
+
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.FirstName, new {  htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+    </div>
+}  

@@ -1,0 +1,209 @@
+﻿@model sampleMVC.Models.SuperAdmin
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SearchByNMByLocByTOLForSuperAdmin</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <script type="text/javascript">
+
+    </script>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                @*<a class="navbar-brand" href="#"></a>*@
+                @Html.ActionLink("Leave Tracker", "GetPagViewBySuperAdmin", "SuperAdmin", new { @class = "navbar-brand" })
+
+
+            </div>
+            <div class="nav navbar-nav navbar-right">
+                @Html.ActionLink("Logout", "Logout", "LTLogin", new { @class = "navbar-brand" })
+            </div>
+            <ul class="nav navbar-nav">
+                @*<li><a href="#">Register New Member</a></li>
+                    <li><a href="~/AdminRole/ApplyLeavesforAdmins">Apply Leave</a></li>*@
+                @*<li><a href="~/AdminRole/ViewLeavesByAdmin">Approve Leaves</a></li>
+                    <li><a href="~/AdminRole/ViewApprovedLeavesByAdmin">View Applied Leaves</a></li>*@
+                @*<li><a href="~/AdminRole/AdminMoreFeature">More Features</a></li>
+                    <li><a href="~/TLRole/Logout">Logout</a></li>*@
+            </ul>
+        </div>
+    </nav>
+    <div class="nav navbar-nav navbar-left">
+
+        @*@foreach (sampleMVC.Models.SuperAdmin item in SearchByNameForSuperAdminList)
+            {*@
+        @*@Html.ActionLink("Back", "SearchByNMByLocByTOLForSuperAdmin", "SuperAdmin", new { @class = "navbar-brand" }, null)*@
+        @*<button type="submit" class="btn btn-primary btn-sm" formaction="~/SuperAdmin/SearchByNMByLocByTOLForSuperAdmin" formmethod="post">Back</button>*@
+
+       
+            @Html.ActionLink("Back", "PAGWiseViewForSuperAdminByProjName", "SuperAdmin", null, new { href = Request.UrlReferrer, @class = "navbar-brand" })
+      
+        @*}*@
+
+    </div>
+
+    <div class="nav navbar-nav navbar-right">
+        @Html.ActionLink("Export To Excel", "ExportToExcelForSuperAdmin", "SuperAdmin", new { @class = "navbar-brand" })
+
+    </div>
+    <script>
+        function showForDateRange() {
+            document.getElementById("ForMonthSelection").style.visibility = 'hidden';
+            document.getElementById("ForDateRange").style.visibility = 'visible';
+            document.getElementById("monthRange").style.visibility = 'visible';
+            document.getElementById("dateRange").style.visibility = 'hidden';
+        }
+        function showForMonthSelection() {
+            document.getElementById("dateRange").style.visibility = 'visible';
+            document.getElementById("monthRange").style.visibility = 'hidden';
+            document.getElementById("ForDateRange").style.visibility = 'hidden';
+            document.getElementById("ForMonthSelection").style.visibility = 'visible';
+
+        }
+    </script>
+
+
+    <div class="col-xs-4" style="text-align:center">
+        <table>
+            <tr>
+                <td class="col-lg-6"><a id="dateRange" onclick="showForDateRange()">By Date Range</a></td>
+                <td class="col-lg-offset-6" style="align-content:center"><a id="monthRange" onclick="showForMonthSelection()">Select Month</a></td>
+            </tr>
+
+        </table>
+    </div>
+
+
+    @*<div class="container">
+
+            <div class="form-group" style="padding-top:0px">
+
+                @using (Html.BeginForm("RefineResult", "SuperAdmin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+
+                {
+                    <div class="col-lg-6" id="ForDateRange" style="visibility:hidden">
+                        <table style="width:25%;margin-left:auto;margin-right:auto;border-collapse: separate;border-spacing: 5px 5px;">
+
+                            <tr>
+                                <td class="navbar-brand"><h6>From</h6></td>
+                                <td id="SD">@Html.TextBoxFor(m => m.StartDateBySuperAdmin, new { @class = "form-control", id = "datepicker", type = "date", placeholder = Html.DisplayNameFor(n => n.StartDateBySuperAdmin) })</td>
+                                <td><h6>To</h6></td>
+                                <td id="ED">@Html.TextBoxFor(m => m.EndDateBySuperAdmin, new { @class = "form-control", id = "datepicker", type = "date", placeholder = Html.DisplayNameFor(n => n.EndDateBySuperAdmin) })</td>
+                                @foreach (sampleMVC.Models.SuperAdmin item1 in Model.SearchByNameForSuperAdminList)
+                                {
+                                    @Html.Hidden("ProjectName", item1.ProjectName);
+
+                                    @Html.Hidden("Branch", item1.Branch);
+                                    break;
+                                }
+                                <td> <button type="submit" class="btn btn-default">Refine</button></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="col-lg-18" id="ForMonthSelection" style="visibility:hidden">
+                        <table style="width:25%;margin-left:auto;margin-right:auto;border-collapse: separate;border-spacing: 5px 5px;">
+
+
+                            <tr>
+                                <td>@Html.DropDownListFor(m => m.selectMonth, Model.selectMonthIM, "Select Month", new { @class = "form-control,longDropdownList" })</td>
+
+
+                                @foreach (sampleMVC.Models.SuperAdmin item1 in Model.PAGWiseViewForSuperAdminByProjNameList)
+                                {
+                                    @Html.Hidden("ProjectName", item1.ProjectName);
+
+                                    @Html.Hidden("Branch", item1.Branch);
+
+                                    break;
+                                }
+                                <td> <button type="submit" class="btn btn-default" formaction="~/SuperAdmin/inputByCalender" formmethod="post">Submit</button></td>
+
+                            </tr>
+                        </table>
+                    </div>
+                    <table>
+                        <tr>
+                            <td>@Html.ValidationMessageFor(m => m.StartDateBySuperAdmin)</td>
+                            <td>@Html.ValidationMessageFor(m => m.EndDateBySuperAdmin)</td>
+                            <td>@Html.ValidationMessageFor(m => m.selectMonth)</td>
+                        </tr>
+
+                    </table>
+                }
+            </div>
+        </div>*@
+
+
+
+
+    <div class="container" style="padding-top:150px">
+
+
+        <div class="table-responsive">
+            @using (Html.BeginForm())
+
+            {
+
+                <table class="table table-striped table-bordered table-hover">
+
+                    <tr>
+
+                        <th>First Name</th>
+                        <th>Last Leaves</th>
+                        <th>Project</th>
+                        <th>Branch</th>
+                        <th>Location</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Type Of Leave</th>
+                        <th>Reason</th>
+                        <th>ScreenShot</th>
+                        <th>Status</th>
+
+                    </tr>
+
+                    @foreach (sampleMVC.Models.SuperAdmin item in Model.SearchByNameForSuperAdminList)
+
+                    {
+
+                        <tr>
+                            <td>@item.FirstName</td>
+                            <td>@item.LastName</td>
+                            <td>@item.ProjectName</td>
+                            <td>@item.Branch</td>
+                            <td>@item.Location</td>
+                            <td>@item.StartDate</td>
+                            <td>@item.EndDate</td>
+                            <td>@item.typeOfLeave</td>
+                            <td>@item.Reason</td>
+                            <td>
+                                <a href="@Url.Action("ScreenShotViewBySuperAdminByAllDetails", "SuperAdmin", new { id = item.sNo })">
+                                    <img src="data:image/jpg;base64,@(Convert.ToBase64String(item.imageSrc11))" alt="Image" width="50" height="50" />
+                                </a>
+
+
+                            </td>
+                            <td>@item._Status</td>
+
+                        </tr>
+                    }
+                </table>
+            }
+
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,172 @@
+﻿@model sampleMVC.Models.ApplyLeave
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Update Screen Shot";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>editLeavesScreenShot</title>
+    <script>
+        function dayDiffSS() {
+            var start = document.getElementById("datepicker1").value;
+            var end = document.getElementById("datepicker2").value;
+            var oneDay = 24 * 60 * 60 * 1000;
+            var firstDate = new Date(start);
+            var secondDate = new Date(end);
+
+            $.ajax({
+                url: '@Url.Action("Sample", "ApplyLeave")',
+                data: { 'SD': start, 'ED': end },
+                success: function (data) {
+                    // put result of action into element with class "result"
+                    if (data > 0) {
+
+                        document.getElementById("TtlDays").value = data;
+                    }
+                },
+                error: function () {
+                    alert('Error');
+                }
+            });
+        }
+    </script>
+    <script type="text/javascript">
+        function preventBack() { window.history.forward(); }
+        setTimeout("preventBack()", 0);
+        window.onunload = function () { null };
+
+        function SuccessMsg() {
+            alert("Leaves Applied Successfully")
+        }
+    </script>
+    <title>Add Screenshot</title>
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Leave Tracker", "", "", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            Leave
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Apply Leave", "ApplyLeaves", "ApplyLeave")</li>
+                            <li>@Html.ActionLink("View Leaves", "ViewLeaves", "ApplyLeave")</li>
+                        </ul>
+                    </li>
+
+                </ul>
+                <div class="nav navbar-nav navbar-right">
+                    @*<button type="button" class="navbar-brand" data-toggle="modal" data-target="#myModal">Change Password</button>*@
+                    @*<button type="button" class="navbar-brand" data-toggle="modal" data-target="#myModal">Change Password</button>*@
+                    @*@Html.ActionLink("Change Password", "", "", new { @class = "navbar-brand", data_toggle = "modal", data_target = "#myModal" })*@
+                    @Html.ActionLink("Logout", "Logout", "LTLogin", new { @class = "navbar-brand" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="padding-top:30px">
+        <h1 style="text-align:center">Add Screenshot</h1>
+    </div>
+    <div class="container">
+
+        <div class="form-group" style="padding-top:30px">
+
+            @using (Html.BeginForm("ApplyLeaves", "ApplyLeave", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                foreach (var item in Model.editScreenShotTLList)
+                {
+                    <table style="width:25%;margin-left:auto;margin-right:auto;border-collapse: separate;border-spacing: 5px 5px;">
+
+
+                        <tr>
+                            @*<td id="SD">@Html.TextBoxFor(m => item.StartDate, new { @class = "form-control", id = "datepicker11", type = "date", placeholder = Html.DisplayNameFor(n => n.StartDate) })</td>*@
+                            <td id="SD">@Html.TextBoxFor(m => item.StartDate, new { @class = "form-control", id = "datepicker11", type = "text", placeholder = Html.DisplayNameFor(n => n.StartDate), @readonly = "readonly" })</td>
+
+
+                        </tr>
+                        <tr>
+                            <td>@Html.ValidationMessageFor(m => m.StartDate)</td>
+                        </tr>
+
+
+                        <tr>
+                            <td id="ED">@Html.TextBoxFor(m => item.EndDate, new { @class = "form-control", id = "datepicker22", type = "text", placeholder = Html.DisplayNameFor(n => n.EndDate),@readonly="readonly" })</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.ValidationMessageFor(m => m.EndDate)</td>
+                        </tr>
+
+
+                        <tr>
+                            @*<td>@Html.DropDownListFor(m => item.TypeOfLeaves, Model.TOL, "Select Type of Leave", new { @class = "form-control", @onchange = "dayDiffSS();" })</td>*@
+                            <td>@Html.TextBoxFor(m => item.TypeOfLeaves,new { @class = "form-control", @onchange = "dayDiffSS();" })</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.ValidationMessageFor(m => m.TypeOfLeaves)</td>
+                        </tr>
+
+
+                        <tr>
+                            <td>@Html.TextBoxFor(m => item.TotalLeaves, new { @class = "form-control", id = "TtlDays1", placeholder = Html.DisplayNameFor(n => n.TotalLeaves), @readonly = "readonly" })</td>
+
+                        </tr>
+                        <tr>
+                            <td>@Html.ValidationMessageFor(m => m.TotalLeaves)</td>
+                        </tr>
+
+
+                        <tr>
+                            <td>@Html.TextAreaFor(m => m.Reason, new { @class = "form-control", placeholder = Html.DisplayNameFor(n => n.Reason) })</td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <input type="file" name="file" class="input-files" required accept="image/jpeg,image/jpg,image/x-png" />
+
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>@Html.ValidationMessageFor(m => m.screenShot)</td>
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                @*<button type="submit" name=m class="btn btn-default" formaction="~/ApplyLeave/updateLeaves" formmethod="post">Save</button>*@
+                                @*<button type="submit" class="btn btn-default">Save</button>*@
+                                <button type="submit" name="m" formaction="~/ApplyLeave/ApplyLeavesForSS" formmethod="post">Submit</button>
+                                <button type="reset" class="btn btn-default">Reset</button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td></td>
+                            <td>
+                                @ViewBag.Message
+                            </td>
+                        </tr>
+                    </table>
+                }
+            }
+        </div>
+    </div>
+</body>
+</html>

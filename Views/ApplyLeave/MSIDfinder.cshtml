@@ -1,0 +1,43 @@
+﻿@model sampleMVC.Models.ApplyLeave
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>MSIDfinder</title>
+</head>
+<body>
+    <div class="container" style="padding-top:10px">
+        <h1 style="text-align:center;padding-top:50px">Check for Correct MSID</h1>
+
+        <div class="table-responsive">
+
+            <table class="table table-striped table-bordered table-hover" id="LeaveTable">
+                <tr>
+                    <th>MSID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                </tr>
+
+                @foreach (var item in Model.MSIDList)
+                {
+
+                    <tr>
+                        <td>@item.MSID</td>
+                        <td>@item.FirstName</td>
+                        <td>@item.LastName</td>
+                    </tr>
+
+                }
+            </table>
+        </div>
+      
+    </div>
+
+</body>
+</html>

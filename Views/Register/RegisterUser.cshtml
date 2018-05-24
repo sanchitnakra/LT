@@ -1,0 +1,375 @@
+﻿@model sampleMVC.Models.DropdownLocation
+
+
+
+@{
+    Layout = "~/Views/Shared/MainPage.cshtml";
+    ViewBag.Title = "Regsiter";
+
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    @Styles.Render("~/Content/Bootstrap.css")
+    <title>Register</title>
+    <script>
+
+        function getDetails() {
+            var MSID = document.getElementById("txtMSID").value;
+            $.ajax({
+                url: '@Url.Action("getDetails", "Register")',
+                data: { 'MSID': MSID, 'FN': MSID },
+                success: function (data) {
+                    // put result of action into element with class "result"
+                    if (data != "") {
+                        document.getElementById("txtEmailID").value = data;
+                    }
+                    else {
+                        alert("MSID is wrong try again ");
+                        document.getElementById("txtMSID").value = "";
+                        document.getElementById("txtEmailID").value = "";
+                    }
+                },
+                error: function (data) {
+                    if (data == "") {
+                        document.getElementById("txtMSID").value = "";
+                        alert("MSID is wrong try again outside ");
+                    }
+                }
+            });
+        }
+
+        function addProject() {
+
+            var project = document.getElementById("txtAddProject").value;
+            $.ajax({
+                url: '@Url.Action("addNewProject", "Register")',
+                data: { 'project': project },
+                success: function (data) {
+                    if (data != "") {
+                        alert(data);
+                    }
+                    else {
+                        //alert("MSID is wrong try again ");
+                        //document.getElementById("txtMSID").value = "";
+                        //document.getElementById("txtEmailID").value = "";
+                    }
+                },
+                error: function (data) {
+                }
+            }
+            );
+        }
+
+        function addSupervisor() {
+
+            var supervisor = document.getElementById("txtAddSupervisor").value;
+            var supervisorID = document.getElementById("txtAddSupervisorEMailID").value;
+            $.ajax({
+                url: '@Url.Action("addNewSupervisor", "Register")',
+                data: { 'supervisor': supervisor, 'supervisorID': supervisorID },
+                success: function (data) {
+                    if (data != "") {
+                        alert(data);
+                    }
+                    else {
+                        //alert("MSID is wrong try again ");
+                        //document.getElementById("txtMSID").value = "";
+                        //document.getElementById("txtEmailID").value = "";
+                    }
+                },
+                error: function (data) {
+                }
+            }
+            );
+        }
+
+
+        function addCustomerManager() {
+
+            var customermanager
+                = document.getElementById("txtAddCustomerManager").value;
+            $.ajax({
+                url: '@Url.Action("addNewCustomerManager", "Register")',
+                data: { 'customermanager': customermanager },
+                success: function (data) {
+                    if (data != "") {
+                        alert(data);
+                    }
+                    else {
+                        //alert("MSID is wrong try again ");
+                        //document.getElementById("txtMSID").value = "";
+                        //document.getElementById("txtEmailID").value = "";
+                    }
+                },
+                error: function (data) {
+                }
+            }
+            );
+        }
+
+
+        function checkMSID() {
+            var MSID = document.getElementById("txtMSID").value;
+            $.ajax({
+                url: '@Url.Action("checkMSIDFormat", "Register")',
+                data: { 'MSID': MSID },
+                success: function (data) {
+                    if (data != "") {
+                        alert(data);
+                        document.getElementById("txtMSID").value = "";
+                    }
+                },
+                error: function (data) {
+                    //if (data = "") {
+                    //    alert("Something Went Wrong");
+                }
+            }
+            )
+        };
+
+        function checkEmailID() {
+            var EmailID = document.getElementById("txtEmailID").value;
+            $.ajax({
+                url: '@Url.Action("checkEmailID", "Register")',
+                data: { 'EmailID': EmailID },
+                success: function (data) {
+                    // put result of action into element with class "result"
+
+                    if (data != "") {
+                        alert(data);
+                        document.getElementById("txtEmailID").value = "";
+                    }
+                },
+                error: function (data) {
+                    //if (data = "") {
+                    //    alert("Something Went Wrong");
+                }
+            }
+            )
+        };
+    </script>
+    <style>
+        
+    </style>
+</head>
+<body>
+    <div class="container" style="padding-top:10px">
+        <h1 style="text-align:center;padding-top:30px">Register</h1>
+        <div class="form-group" style="padding-top:15px">
+
+            @using (Html.BeginForm())
+            { 
+                <table style="width:25%;margin-left:auto;margin-right:auto;border-collapse: separate;border-spacing: 5px 5px;">
+                    <tr>
+                        @*<td>@Html.TextBoxFor(m => m.MSID, new { @class = "form-control", id = "txtMSID", placeholder = Html.DisplayNameFor(n => n.MSID), @onchange = "getDetails()" })</td>*@
+                       <td>@Html.TextBoxFor(m => m.MSID, new { @class = "form-control", id = "txtMSID", placeholder = Html.DisplayNameFor(n => n.MSID), @onchange = "checkMSID()", required = "required" })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.MSID)</td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.TextBoxFor(m => m.TcsEmpID, new { @class = "form-control", placeholder = Html.DisplayNameFor(n => n.TcsEmpID), required = "required" })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.TcsEmpID)</td>
+                    </tr>
+
+
+                    <tr>
+                        <td>@Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", id = "txtFN", placeholder = Html.DisplayNameFor(n => n.FirstName), required = "required" })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.FirstName)</td>
+                    </tr>
+
+
+                    <tr>
+                        <td>@Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = Html.DisplayNameFor(n => n.LastName), required = "required" })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.LastName)</td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.TextBoxFor(m => m.EmailID, new { @class = "form-control", id = "txtEmailID", placeholder = Html.DisplayNameFor(n => n.EmailID), @onchange= "checkEmailID()", required = "required" })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.EmailID)</td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.TextBoxFor(m => m.Password, new { @class = "form-control", @type = "password", placeholder = Html.DisplayNameFor(n => n.Password), required = "required" })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.Password)</td>
+                    </tr>
+
+
+                    <tr>
+                        <td>@Html.TextBoxFor(m => m.ConfirmPassword, new { @class = "form-control", @type = "password", placeholder = Html.DisplayNameFor(n => n.ConfirmPassword), required = "required" })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.ConfirmPassword)</td>
+                    </tr>
+
+
+                    <tr>
+                        <td>@Html.DropDownListFor(m => m.SubArea, new SelectList(Model.SubAreaList, "SubAreaID", "SubAreaName"), "Select Sub Area", new { @class = "form-control", required = "required" })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.SubArea)</td>
+                    </tr>
+
+
+
+                    <tr>
+                        <td>@Html.DropDownListFor(m => m.Supervisor, new SelectList(Model.SupervisorList, "SupervisorID", "SupervisorName"), "Select Supervisor", new { @class = "form-control", required = "required" })
+                        @Html.ActionLink("Add New Supervisor", "", "", new { @class = "navbar-brand", data_toggle = "modal", data_target = "#addSupervisor" })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.Supervisor)</td>
+                    </tr>
+
+
+                    <tr>
+                        <td>@Html.DropDownListFor(m => m.CustomerManager, new SelectList(Model.CustomerManagerList, "CustomerManagerID", "CustomerManagerName"), "Select Customer Manager", new { @class = "form-control", required = "required" })
+                            @Html.ActionLink("Add New Manager", "", "", new { @class = "navbar-brand", data_toggle = "modal", data_target = "#addCustomerManager" })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.CustomerManager)</td>
+                    </tr>
+
+
+                    <tr>
+                        <td>@Html.DropDownListFor(m => m.Project, new SelectList(Model.ProjectNameList, "ProjectID", "ProjectName"), "Select Project", new { @class = "form-control", required = "required" })
+                         @Html.ActionLink("Add New Project", "", "", new { @class = "navbar-brand", data_toggle = "modal", data_target = "#addProject" })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.Project)</td>
+                    </tr>
+
+
+                    <tr>
+                        <td>@Html.DropDownListFor(m => m.Location, new SelectList(Model.LocationList, "LocationID", "LocationName"), "Select Location", new { @class = "form-control", required = "required" })
+                        
+                    </tr>
+                    <tr>
+                        <td>@Html.ValidationMessageFor(m => m.Location)</td>
+                    </tr>
+
+                    <tr>
+
+                        <td>
+                            <button type="submit" class="btn btn-default">Register</button>
+                            <button type="reset" class="btn btn-default">Reset</button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td></td>
+                        <td>
+                            @ViewBag.Message
+                        </td>
+                    </tr>
+                </table>
+            }
+        </div>
+    </div>
+    
+
+    <div class="container">
+
+        <!-- Trigger the modal with a button -->
+        @*<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>*@
+
+        <!-- Modal -->
+        <div class="modal fade" id="addProject" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Please enter new Project Details</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            Please Enter Project Name<br />
+                            
+                        </p>
+
+                        @Html.TextBoxFor(m => m.newProjectName, new { @class = "form-control", id = "txtAddProject", type = "text", placeholder = Html.DisplayNameFor(n => n.newProjectName) })
+                    </div>
+                    <div class="modal-footer">
+
+                        <button type="submit" name=m class="btn btn-default" data-dismiss="modal" onclick="addProject()">Submit</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="modal fade" id="addSupervisor" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Please enter new Supervisor Details</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            <br />
+                        </p>
+
+                        @Html.TextBoxFor(m => m.newSupervisor, new { @class = "form-control", id = "txtAddSupervisor", type = "text", placeholder = Html.DisplayNameFor(n => n.newSupervisor) })
+                        @Html.TextBoxFor(m => m.newSupervisorEmailID, new { @class = "form-control", id = "txtAddSupervisorEMailID", type = "text", placeholder = Html.DisplayNameFor(n => n.newSupervisorEmailID) })
+                        @*@Html.TextBoxFor(m => m.PwdCnf, new { @class = "form-control", id = "txtMSIDCnf", type = "password", placeholder = Html.DisplayNameFor(n => n.PwdCnf), @onchange = "validatePass()" })*@
+                        @*<button type="submit" name=m class="btn btn-default" formaction="~/LTLogin/forgetPassword" formmethod="post">Submit</button>*@
+
+                    </div>
+                    <div class="modal-footer">
+
+                        <button type="submit" name=m class="btn btn-default" data-dismiss="modal" onclick="addSupervisor()">Submit</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="modal fade" id="addCustomerManager" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Please enter new Customer Manager Details</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            Please enter new Customer Manager Name<br />
+                        </p>
+
+                        @Html.TextBoxFor(m => m.newCustomerManager, new { @class = "form-control", id = "txtAddCustomerManager", type = "text", placeholder = Html.DisplayNameFor(n => n.newCustomerManager) })
+                        
+                    </div>
+                    <div class="modal-footer">
+
+                        <button type="submit" name=m class="btn btn-default" data-dismiss="modal" onclick="addCustomerManager()">Submit</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+</body>
+</html>
